@@ -1,0 +1,30 @@
+# installing tree packaging:
+ansible -m yum -a "name=tree state=present" --become web
+#Remove the tree package from clients
+ansible -m yum -a "name=tree state=absent"  --become web
+
+#Installing the package httpd
+ansible -m yum -a "name=httpd state=present" --become web
+#Starting the httpd service
+ansible -m service -a "name=httpd state=started" --become web
+#Removing the package httpd
+ansible -m yum -a "name=httpd state=absent" --become web
+
+# non Non-Idempotent and Idempotent behaviour
+
+---
+- hosts: webservice
+  become: true
+  tasks:
+    - name: Non-Idempotent approach with shell command
+      shell: echo "Non-Idempotent approach with shell command" >/root/tmp/tmp.txt
+
+
+---
+- hosts: webservice
+  become: true
+  tasks:
+    - name: Idempotent approach with copy module
+      copy:
+        dest: /root/tmp/tmp.txt
+        content: "Idempotent approach"
