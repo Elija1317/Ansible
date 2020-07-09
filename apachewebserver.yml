@@ -1,0 +1,36 @@
+# steps in installing Apachewebserver
+# 1.Installing the latest package of httpd
+# 2.start and enabling the Apachewebserver
+# 4. create a simple htmls web package
+# 5. defininng the webservice name i.e www.example.command
+# 6. Update the entry in /etc/host file
+
+
+---
+- hosts: webservice
+  become: true
+  become_user: root
+  tasks:
+    - name: Install the latest package of httpd
+      yum:
+        name: httpd
+        state: latest
+    - name: start and enable the httpd
+      service:
+        name: httpd
+        state: started
+        enabled: true
+
+    - name: create simple html web package
+      copy:
+        content: "welcome to the Ansible play book\n"
+        dest: /var/www/html/index.html
+    - name: define the service name i.e www.example.com
+      lineinfile:
+        path: /etc/httpd/conf/httpd.conf
+        line: ServerName www.web.example.com:80
+        insertafter: "#ServerName"
+    - name: update its in /etc/ansible/hosts
+      lineinfile:
+        path: etc/ansible/hosts
+        line: 172.31.84.150 www.web.example.com
