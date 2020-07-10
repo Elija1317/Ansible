@@ -1,0 +1,17 @@
+---
+- hosts: test
+  become: true
+  become_user: root
+  vars:
+    remod_dir: /etc/ansible/facts.d
+    fcats_file: custom.fact
+  tasks:
+    - name: Create directory on test servers
+      file:
+        state: directory
+        recurse: yes
+        path: "{{remod_dir}}"
+    - name: copy a file
+      copy:
+        src: "{{fcats_file}}"
+        dest: "{{remod_dir}}"
