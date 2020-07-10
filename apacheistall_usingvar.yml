@@ -1,0 +1,27 @@
+---
+- hosts: webservice
+  become: true
+  become_user: root
+  vars:
+    web_pkg: httpd
+    perl_pkg: perl
+  tasks:
+    - name: Install httpd package using yum
+      yum:
+        name:
+          - "{{web_pkg}}"
+          - "{{perl_pkg}}"
+        state: latest
+    - name: Start and enable service httpd
+      service:
+        name: "{{web_pkg}}"
+        state: started
+        enabled: true
+    - name: Create simple HTML page
+      copy:
+        content: "Play book written for Apache with help of VARS\n"
+        dest: /var/www/html/index.html
+    - name: Update this in /etc/ansible/hosts file
+      lineinfile:
+        path: /etc/ansible/hosts
+        line: 172.31.84.150 www.web.example.com
