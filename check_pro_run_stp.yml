@@ -1,0 +1,11 @@
+---
+- hosts: test
+  become: true
+  become_user: root
+  tasks:
+    - name: Verify the App/Database is Running or Not!
+      shell: if ps -eaf| egrep 'httpd'| grep -v grep > /dev/null; then echo 'Processes_Running';else echo 'Processes_not_Runnnig'; fi
+      ignore_errors: true
+      register: app_proc_check
+    - debug:
+        msg: "{{app_proc_check.stdout}}"

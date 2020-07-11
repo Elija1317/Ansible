@@ -1,0 +1,32 @@
+---
+- hosts: servers
+  become: true
+  become_user: root
+  vars:
+    web_pkg: httpd
+  tasks:
+    - name: Install the Pacakge using yum
+      yum:
+        name:
+          - "{{web_pkg}}"
+        state: latest
+        when: ansible_os_family == "RedHat"
+    - name: Start and Enable the httpd
+      service:
+        name:  "{{web_pkg}}"
+        enabled: true
+        state: started
+    - name: Install the Pacakge using apt
+      apt:
+        name:
+          - "{{web_pkg}}"
+        when: ansible_os_family == "Debian"
+    - name: start and enabled service
+      service:
+        name: "{{web_pkg}}"
+        state: started
+        enabled: true
+    - name: Create simple html package
+      copy:
+        content: "Created playbook using variable,with_items, when\n"
+        dest: /var/www/html/index.html

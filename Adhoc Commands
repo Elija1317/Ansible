@@ -10,6 +10,9 @@ ansible -m service -a "name=httpd state=started" --become web
 #Removing the package httpd
 ansible -m yum -a "name=httpd state=absent" --become web
 
+# to know distrubtion release Version
+$ ansible -m command -a "cat /etc/redhat-release" test
+
 # non Non-Idempotent and Idempotent behaviour
 
 ---

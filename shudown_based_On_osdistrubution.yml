@@ -1,0 +1,8 @@
+---
+- hosts: test
+  become: true
+  become_user: root
+  tasks:
+    - name: Shutdown the server
+      command: poweroff
+      when: ansible_os_family == "Debian"

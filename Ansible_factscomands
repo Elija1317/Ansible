@@ -1,0 +1,23 @@
+#ansible facts
+
+1. The hostname
+2. kernal version
+3. The network interface
+4. The Ip address
+5. The Version of the operating system.
+6. Various environment variables
+7. The Available of Free memory
+
+commands:
+$ansible -m setup test
+$ ansible test -m setup -a "filter=*ipv4"
+$ ansible test -m setup -a "filter=hostname"
+$ ansible test -m setup -a "filter=ansible_fqdn"
+      "ansible_facts": {
+          "ansible_fqdn": "www.web.example.com",
+            "discovered_interpreter_python": "/usr/bin/python"
+            },
+              "changed": false
+
+$ ansible test -m setup -a "filter=ansible_os_family"
+"Debian" "RedHat"
