@@ -1,5 +1,5 @@
 ---
-- hosts: test
+- hosts: dev
   become: true
   become_user: root
   tasks:
@@ -7,5 +7,38 @@
       shell: if ps -eaf| egrep 'httpd'| grep -v grep > /dev/null; then echo 'Processes_Running';else echo 'Processes_not_Runnnig'; fi
       ignore_errors: true
       register: app_proc_check
-    - debug:
-        msg: "{{app_proc_check.stdout}}"
+    - debug: msg="{{ app_proc_check }}"
+    - name: Decession point to start Patching
+      fail: msg="{{ inventory_hostname }} having runnning applications , please stop first and then patching"
+      when: app_proc_check == 'Processes_Running'
+    - name: Copy the kernla.repo Patch file
+      copy:
+        src: /home/ansadmin/ansible_ws/kernla.repo
+        dest: /etc/ansible/yumrepo.d/
+    - name: Current kernal version of System
+      shell: uname -r
+      register: curr_kern_ver
+    - debug: msg="{{curr_kern_ver}}"
+    - name: Initializing patching
+      yum:
+        name: kernel
+        state: latest
+      register: yum_update
+    - debug: msg="kernal has been updated!"
+      when: yum_update.rc == 0
+    - name: check if reboot is required or not
+      shell: kerner_new_ver=$(rpm -qa --last kernel| head -1| awk '{print $1}'| sed 's/kernel-//g'); kernel_now=&(uname-r); if [[kerner_new_ver != kernel_now]]; then echo "Reboot is requird"; else echo " Reboot is not required"; fi
+      ignore_errors: true
+      register: reboot_check
+    - debug: msg="{{ reboot_check }}"
+    - name: Rebooting the system after Patching
+      shell: "shutdown -r y now"
+      async: 1
+      poll: 0
+      name: Wait the System to come up
+      pause:
+        minutes: 3
+    - name: New kernel version
+      shell: uname -r
+      register: new_kernel
+    - debug: msg="echo The new Kernel Version is  :{{new_kernel}}  and old kernel version is {{}}"
