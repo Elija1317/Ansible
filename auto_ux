@@ -35,10 +35,19 @@ my_head
     break
     ;;
     1)
+    if [ $target = "None" ]; then
+        echo -e "Select Target servers from Option 22 \n"
+        read dummy
+        else
     echo "Welcome to Pre-Validation"
     sleep 4
+    fi
     ;;
     2)
+    if [ $target = "None" ]; then
+        echo -e "Select Target servers from Option 22 \n"
+        read dummy
+        else
         while true
           do
 
@@ -70,11 +79,18 @@ my_head
                  ;;
                esac
              done
-             ;;
+    fi
+    ;;
     3)
+    if [ $target = "None" ]; then
+        echo -e "Select Target servers from Option 22 \n"
+        read dummy
+        else
     echo "Welcome to Run Adhoc Commands"
     sleep 4
+    fi
     ;;
+
     22)
           while true
             do
