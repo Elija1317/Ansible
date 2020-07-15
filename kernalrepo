@@ -1,0 +1,10 @@
+[RHEL8.1RepoBaseOSPackages_http]
+name=RHEL8Yum
+baseurl="http://192.168.209.139/content/rhel8.1/x86_64/dvd/BaseOS"
+gpgcheck=0
+enabled=1
+[RHEL8.1AppPackages_http]
+name=RHEL8AppPackages
+baseurl="http://192.168.209.139/content/rhel8.1/x86_64/dvd/AppStream"
+gpgcheck=0
+enabled=1
